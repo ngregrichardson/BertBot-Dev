@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html ng-cloak ng-app="app">
+
+<head>
+    <title>BeʳᵗBot Setup</title>
+    <link rel="icon" href="https://cdn.glitch.com/f9cafe91-b67e-4c85-8251-94ac56e8e212%2FBertBotFavicon.png?1546271700829"
+        type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.13/angular-material.css">
+    <link rel="stylesheet" type="text/css" href="https://material.angularjs.org/1.1.13/docs.css">
+    <link rel="stylesheet" type="text/css" href="/getStyles">
+    <style>
+        [ng\:cloak],
+        [ng-cloak],
+        .ng-cloak {
+            display: none;
+        }
+
+        .tabsdemoDynamicHeight md-content h1:first-child {
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="md-display-3">
+        BeʳᵗBot Configuration
+    </h1>
+    <md-content>
+        <md-tabs md-dynamic-height md-border-bottom md-center-tabs="">
+            <md-tab label="Server Settings">
+                <md-content class="md-padding">
+                    <h1 class="md-display-2">Server Settings</h1>
+                    <form class="md-headline" ng-controller="serverSettingsController" id="serverSettingsController">
+                        Bot Name:
+                        <input type="text" name="botName" class="required" ng-change="save('botName', botName)"
+                            ng-model="botName"><br>
+                        Team Number:
+                        <input type="number" name="teamNumber" class="required" ng-change="save('teamNumber', teamNumber)"
+                            ng-model="teamNumber"><br>
+                        Discord Server ID:
+                        <input type="text" name="serverId" class="required" ng-change="save('serverId', serverId)"
+                            ng-model="serverId">
+                    </form>
+                </md-content>
+            </md-tab>
+            <md-tab label="Trello Settings">
+                <md-content class="md-padding">
+                    <h1 class="md-display-2">Trello Settings</h1>
+                    <form class="md-headline" ng-controller="trelloSettingsController" id="trelloSettingsController">
+                        <input type="checkbox" name="trelloNotificationsEnabled" ng-change="save('trelloNotificationsEnabled', trelloNotificationsEnabled)"
+                            ng-model="trelloNotificationsEnabled">
+                        Enable Trello Notifications?<br>
+                        <div id="trelloNotifications" ng-hide="!trelloNotificationsEnabled">
+                            Trello Key:
+                            <input type="text" name="trelloKey" class="required" ng-change="save('trelloKey', trelloKey)"
+                                ng-model="trelloKey"><br>
+                            Trello Token:
+                            <input type="text" name="trelloToken" class="required" ng-change="save('trelloToken', trelloToken)"
+                                ng-model="trelloToken"><br>
+                            Trello Notification Channel ID:
+                            <input type="text" name="trelloNotificationsChannelId" class="required" ng-change="save('trelloNotificationsChannelId', trelloNotificationsChannelId)"
+                                ng-model="trelloNotificationsChannelId"><br>
+                            Watched Trello Board IDs (separated by commas):
+                            <input type="text" name="watchedTrelloBoardIds" class="required" ng-change="save('watchedTrelloBoardIds', watchedTrelloBoardIds)"
+                                ng-model="watchedTrelloBoardIds"><br>
+                            Enabled Trello Notifications:<br>
+                            <table>
+                                <tr>
+                                    <td><input type="checkbox" name="cardCreated" ng-change="save('cardCreated', cardCreated)"
+                                            ng-model="cardCreated">
+                                        Card Created
+                                    </td>
+                                    <td><input type="checkbox" name="cardDescriptionChanged" ng-change="save('cardDescriptionChanged', cardDescriptionChanged)"
+                                            ng-model="cardDescriptionChanged">
+                                        Card Description Changed
+                                    </td>
+                                    <td><input type="checkbox" name="cardDueDateChanged" ng-change="save('cardDueDateChanged', cardDueDateChanged)"
+                                            ng-model="cardDueDateChanged">
+                                        Card Due Date Changed
+                                    </td>
+                                    <td><input type="checkbox" name="cardPositionChanged" ng-change="save('cardPositionChanged', cardPositionChanged)"
+                                            ng-model="cardPositionChanged">
+                                        Card Position Changed
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="cardListChanged" ng-change="save('cardListChanged', cardListChanged)"
+                                            ng-model="cardListChanged">
+                                        Card List Changed
+                                    </td>
+                                    <td><input type="checkbox" name="cardNameChanged" ng-change="save('cardNameChanged', cardNameChanged)"
+                                            ng-model="cardNameChanged">
+                                        Card Name Changed
+                                    </td>
+                                    <td><input type="checkbox" name="cardMemberAdded" ng-change="save('cardMemberAdded', cardMemberAdded)"
+                                            ng-model="cardMemberAdded">
+                                        Card Member Added
+                                    </td>
+                                    <td><input type="checkbox" name="cardMemberRemoved" ng-change="save('cardMemberRemoved', cardMemberRemoved)"
+                                            ng-model="cardMemberRemoved">
+                                        Card Member Removed
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="cardChecklistAdded" ng-change="save('cardChecklistAdded', cardChecklistAdded)"
+                                            ng-model="cardChecklistAdded">
+                                        Card Checklist Added
+                                    </td>
+                                    <td><input type="checkbox" name="cardChecklistRemoved" ng-change="save('cardChecklistRemoved', cardChecklistRemoved)"
+                                            ng-model="cardChecklistRemoved">
+                                        Card Checklist Removed
+                                    </td>
+                                    <td><input type="checkbox" name="cardDeleted" ng-change="save('cardDeleted', cardDeleted)"
+                                            ng-model="cardDeleted">
+                                        Card Deleted
+                                    </td>
+                                    <td><input type="checkbox" name="cardUnarchived" ng-change="save('cardUnarchived', cardUnarchived)"
+                                            ng-model="cardUnarchived">
+                                        Card Unarchived
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="cardArchived" ng-change="save('cardArchived', cardArchived)"
+                                            ng-model="cardArchived">
+                                        Card Archived
+                                    </td>
+                                    <td><input type="checkbox" name="cardAttachmentAdded" ng-change="save('cardAttachmentAdded', cardAttachmentAdded)"
+                                            ng-model="cardAttachmentAdded">
+                                        Card Attachment Added
+                                    </td>
+                                    <td><input type="checkbox" name="cardAttachmentRemoved" ng-change="save('cardAttachmentRemoved', cardAttachmentRemoved)"
+                                            ng-model="cardAttachmentRemoved">
+                                        Card Attachment Removed
+                                    </td>
+                                    <td><input type="checkbox" name="commentAdded" ng-change="save('commentAdded', commentAdded)"
+                                            ng-model="commentAdded">
+                                        Comment Added
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="commentEdited" ng-change="save('commentEdited', commentEdited)"
+                                            ng-model="commentEdited">
+                                        Comment Edited
+                                    </td>
+                                    <td><input type="checkbox" name="listCreated" ng-change="save('listCreated', listCreated)"
+                                            ng-model="listCreated">
+                                        List Created
+                                    </td>
+                                    <td><input type="checkbox" name="listNameChanged" ng-change="save('listNameChanged', listNameChanged)"
+                                            ng-model="listNameChanged">
+                                        List Name Changed
+                                    </td>
+                                    <td><input type="checkbox" name="listPositionChanged" ng-change="save('listPositionChanged', listPositionChanged)"
+                                            ng-model="listPositionChanged">
+                                        List Position Changed
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="listUnarchived" ng-change="save('listUnarchived', listUnarchived)"
+                                            ng-model="listUnarchived">
+                                        List Unarchived
+                                    </td>
+                                    <td><input type="checkbox" name="listArchived" ng-change="save('listArchived', listArchived)"
+                                            ng-model="listArchived">
+                                        List Archived
+                                    </td>
+                                    <td><input type="checkbox" name="checklistItemMarkedComplete" ng-change="save('checklistItemMarkedComplete', checklistItemMarkedComplete)"
+                                            ng-model="checklistItemMarkedComplete">
+                                        Checklist Item Completed
+                                    </td>
+                                    <td><input type="checkbox" name="checklistItemMarkedIncomplete" ng-change="save('checklistItemMarkedIncomplete', checklistItemMarkedIncomplete)"
+                                            ng-model="checklistItemMarkedIncomplete">
+                                        Checklist Item Incompleted
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </form>
+                </md-content>
+            </md-tab>
+            <md-tab label="Order System Settings">
+                <md-content class="md-padding">
+                    <h1 class="md-display-2">Order System Settings</h1>
+                    <form class="md-headline" ng-controller="orderSystemController" id="orderSystemController">
+                        <input type="checkbox" name="orderSystemEnabled" ng-change="save('orderSystemEnabled', orderSystemEnabled)"
+                            ng-model="orderSystemEnabled">
+                        Enable Order Request System?<br>
+                        <div id="orderRequestSystem" ng-hide="!orderSystemEnabled">
+                            Order Request Board ID:
+                            <input type="text" name="orderRequestBoardId" class="required" ng-change="save('orderRequestBoardId', orderRequestBoardId)"
+                                ng-model="orderRequestBoardId"><br>
+                            Order Placed Checklist Item Name:
+                            <input type="text" name="orderPlacedChecklistItemName" class="required" ng-change="save('orderPlacedChecklistItemName', orderPlacedChecklistItemName)"
+                                ng-model="orderPlacedChecklistItemName"><br>
+                            Order Placed List Name:
+                            <input type="text" name="orderPlacedListName" class="required" ng-change="save('orderPlacedListName', orderPlacedListName)"
+                                ng-model="orderPlacedListName"><br>
+                            Order Requested List Name:
+                            <input type="text" name="orderRequestedListName" class="required" ng-change="save('orderRequestedListName', orderRequestedListName)"
+                                ng-model="orderRequestedListName"><br>
+                            Order From Email:
+                            <input type="text" name="orderFrom" class="required" ng-change="save('orderFrom', orderFrom)"
+                                ng-model="orderFrom"><br>
+                            Order From Email Password:
+                            <input type="text" name="orderFromPassword" class="required" ng-change="save('orderFromPassword', orderFromPassword)"
+                                ng-model="orderFromPassword"><br>
+                            Order To Email:
+                            <input type="text" name="orderTo" class="required" ng-change="save('orderTo', orderTo)"
+                                ng-model="orderTo"><br>
+                        </div>
+                    </form>
+                </md-content>
+            </md-tab>
+            <md-tab label="Swear Filter Settings">
+                <md-content class="md-padding">
+                    <h1 class="md-display-2">Swear Filter Settings</h1>
+                    <form class="md-headline" ng-controller="swearFilterController" id="swearFilterController">
+                        <input type="checkbox" name="swearFilterEnabled" ng-change="save('swearFilterEnabled', swearFilterEnabled)"
+                            ng-model="swearFilterEnabled">
+                        Enable Swear Filter?<br>
+                        <div id="swearFilter" ng-hide="!swearFilterEnabled">
+                            Swear Filter Whitelisted Channel Names (separated by commas):
+                            <input type="text" name="swearFilterWhitelistedChannelNames" ng-change="save('swearFilterWhitelistedChannelNames', swearFilterWhitelistedChannelNames)"
+                                ng-model="swearFilterWhitelistedChannelNames">
+                        </div>
+                    </form>
+                </md-content>
+            </md-tab>
+            <md-tab label="Moderation Settings">
+                <md-content class="md-padding">
+                    <h1 class="md-display-2">Moderation Settings</h1>
+                    <form class="md-headline" ng-controller="modSystemController" id="modSystemController">
+                        <input type="checkbox" name="modSystemEnabled" ng-change="save('modSystemEnabled', modSystemEnabled)"
+                            ng-model="modSystemEnabled">
+                        Enable Moderation Commands?<br>
+                        <div id="mod" ng-hide="!modSystemEnabled">
+                            Moderation Command Roles (separated by commas):
+                            <input type="text" name="modCommandRoles" ng-change="save('modCommandRoles', modCommandRoles)"
+                                ng-model="modCommandRoles">
+                        </div>
+                    </form>
+                </md-content>
+            </md-tab>
+            <md-tab label="Meeting System Settings">
+                <md-content class="md-padding">
+                    <h1 class="md-display-2">Meeting System Settings</h1>
+                    <form class="md-headline" ng-controller="meetingSystemController" id="meetingSystemController">
+                        <input type="checkbox" name="meetingNotificationsEnabled" ng-change="save('meetingNotificationsEnabled', meetingNotificationsEnabled)"
+                            ng-model="meetingNotificationsEnabled">
+                        Enable Meeting Notifications?<br>
+                        <div id="meetingNotifications" ng-hide="!meetingNotificationsEnabled">
+                            Meeting Notifications Channel ID:
+                            <input type="text" name="meetingNotificationChannelId" class="required" ng-change="save('meetingNotificationChannelId', meetingNotificationChannelId)"
+                                ng-model="meetingNotificationChannelId">
+                            <div id="meetings">
+                                <div class="meeting" id="{{ meetings.indexOf(meeting) }}" ng-repeat="meeting in meetings">
+                                    Description:
+                                    <input id="description" type="text" ng-model="meeting[Object.keys(meeting)[0]].description"
+                                        ng-change="save('meetings', meetings)"><br>
+                                    Day:
+                                    <input id="date" type="number" ng-model="meeting[Object.keys(meeting)[0]].date"
+                                        ng-change="save('meetings', meetings)"><br>
+                                    Month:
+                                    <input id="month" type="text" ng-model="months[meeting[Object.keys(meeting)[0]].months]"
+                                        ng-change="save('meetings', meetings)"><br>
+                                    Time:
+                                    <input id="time" type="text" ng-model="meeting[Object.keys(meeting)[0]].hours + ':' + meeting[Object.keys(meeting)[0]].minutes.toString().length == 1 ? '0' + meeting[Object.keys(meeting)[0]].minutes : meeting[Object.keys(meeting)[0]].minutes"
+                                        ng-change="save('meetings', meetings)"><br>
+                                    <input type="image" src="https://img.icons8.com/metro/1600/delete.png" onclick="remove(this)"></div><br>
+                            </div>
+                        </div>
+                    </form>
+                </md-content>
+            </md-tab>
+            <md-tab label="Misc Settings">
+                <md-content class="md-padding">
+                    <h1 class="md-display-2">Misc Settings</h1>
+                    <form class="md-headline" ng-controller="miscController" id="miscController">
+                        <input type="checkbox" name="likeCounterEnabled" ng-change="save('likeCounterEnabled', likeCounterEnabled)"
+                            ng-model="likeCounterEnabled">
+                        Enable Like Counter?<br>
+                        Blaise Whitelisted Channel Names (separated by commas):
+                        <input type="text" name="blaiseWhitelistedChannelNames" ng-change="save('blaiseWhitelistedChannelNames', blaiseWhitelistedChannelNames)"
+                            ng-model="blaiseWhitelistedChannelNames"><br>
+                        Restricted Command Roles (separated by commas):
+                        <input type="text" name="restrictedCommandRoles" ng-change="save('restrictedCommandRoles', restrictedCommandRoles)"
+                            ng-model="restrictedCommandRoles">
+                    </form>
+                </md-content>
+            </md-tab>
+        </md-tabs>
+    </md-content>
+    <input type="submit" name="save" ng-click="save()" value="Save">
+    <div ng-controller="errorController" id="errorController">
+        <p class="error" ng-if="err">{{ err }}</p>
+    </div>
+    <iframe src="https://discordapp.com/widget?id=529060705589002260&theme=dark" allowtransparency="true" frameborder="0"></iframe>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-messages.min.js"></script>
+    <script src="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.13/angular-material.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
+    <script src="/getSettingsJs"></script>
+</body>
+
+</html>

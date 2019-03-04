@@ -1,0 +1,159 @@
+body {
+  background-color: rgb(48,48,48);
+  color: white;
+  font-family: 'Lato', sans-serif !important;
+  font-size: 110%;
+}
+
+::selection {
+ background: red; 
+}
+
+a, a:visited {
+  color: white;
+}
+
+a:hover {
+  color: #b4b4b4;
+}
+
+h1 {
+  text-align: center;
+}
+
+.md-display-3 {
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+form {
+  text-align: center;
+  font-weight: bold;
+}
+
+input {
+  background: transparent;
+  border: none;
+  border-bottom: solid 2px white;
+  color: white;
+  font-size: 90%;
+  cursor: pointer;
+}
+
+input[type="image"], input[type="image"]:hover, input[type="image"]:active, input[type="image"]:focus {
+  width: 25px;
+  height: 25px;
+  border: none;
+  padding: 3px 5px 0px 5px;
+  -webkit-transition: width 1s, height 1s;
+  transition: width 1s, height 1s;
+}
+
+input[type="image"]:hover {
+  width: 30px;
+  height: 30px;
+  -webkit-transition: width 1s, height 1s;
+  transition: width 1s, height 1s;
+}
+
+.required {
+  border-bottom: solid 2px red !important;
+}
+
+input:hover {
+  border-bottom: solid 2px #b4b4b4;
+}
+
+input:active, input:focus {
+ border: solid 2px white; 
+}
+
+button {
+  background: transparent;
+  border: none;
+  border-bottom: solid 2px white;
+  color: white;
+  font-size: 90%;
+}
+
+button:hover {
+  border-bottom: solid 2px #b4b4b4;
+}
+
+button:active, button:focus {
+ border: solid 2px white; 
+}
+
+.button-link, .button-link:hover {
+  color: white;
+  text-decoration: none;
+}
+
+table {
+ margin: auto;
+ text-align: left;
+}
+
+.error {
+  font-weight: bold;
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  color: red;
+}
+
+.meeting {
+  background-color: #2b2b2b;
+  width: 30%;
+  margin: auto;
+  text-align: left;
+  padding: 20px 0px 20px 20px;
+}
+
+iframe {
+  position: absolute;
+  bottom: 20px;
+  right:20px;
+  width: 20%;
+  height: 50%;
+}
+
+@media only screen and (max-width: 1145px) {
+  iframe {
+    width: 40%;
+    height: 50%;
+  }
+  
+  .meeting {
+    width: 80%;
+  }
+}
+
+@media only screen and (max-width: 635px), only screen and (max-device-width: 640px) {
+  iframe {
+    margin: auto;
+    width: 90%;
+    height: 30%;
+  }
+  
+  .meeting {
+    width: 80%;
+  }
+}
+
+/* Bootstrap Overrides */
+/*._md {
+  background-color: #363942;
+}
+.md-padding {
+  background-color: #363942;
+}
+md-tabs.md-default-theme .md-tab.md-active, md-tabs .md-tab.md-active, md-tabs.md-default-theme .md-tab.md-active md-icon, md-tabs .md-tab.md-active md-icon, md-tabs.md-default-theme .md-tab.md-focused, md-tabs .md-tab.md-focused, md-tabs.md-default-theme .md-tab.md-focused md-icon, md-tabs .md-tab.md-focused md-icon {
+  color: white;
+}
+md-tabs.md-default-theme .md-tab .md-ripple-container, md-tabs .md-tab .md-ripple-container {
+  color: black;
+}
+md-tabs.md-default-theme md-ink-bar, md-tabs md-ink-bar {
+
+}*/

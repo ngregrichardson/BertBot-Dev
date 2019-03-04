@@ -1,0 +1,42 @@
+{
+  "name": "bertbot",
+  "version": "1.0.0",
+  "description": "BeʳᵗBot was created for FRC team 4750 to use in their Discord server. The bot features a variety of commands and tools and is self hosted and open-source, so feel free to make any changes you would like!\r # Features\r ### Swear Filter\r - Immediately and silenty removes any message containing a profanity\r - Notifies the author of why their message was removed, allows them to resend without the profanity\r - Notifies the server owner of the time, author, and profanity that was removed\r - Includes the ability to customize blocked words and whitelist channels from the filter\r ### Trello Notifications\r - Links Trello boards with a Discord channel to send notifications when an event happens on the board\r - Able to select which boards to watch as well as customize the types of events that will send notifications\r ### Order Request System\r - Links with Trello and Gmail to send a mentor a notification when an order request form is uploaded to Trello\r - Once the order has been placed by the mentor, they can simply reply and it will move the card from the *Orders Requested* to *Orders Placed* list and check off the ckeclist item for *Order Placed*.\r # Commands\r ### Kickoff\r - Displays the amount of time until kickoff  \r Use: `!kickoff`\r ### Poll\r - Creates a yes/no/maybe poll in the channel  \r Use: `!poll [question]`\r ### Strawpoll\r - Creates a strawpoll and sends the link in the channel  \r Use: `!strawpoll [\"title\"] [\"option 1\"] [\"option 2\"]...`\r - Use quotation marks around the title and each option\r ### Blaise\r - Sends a random dad joke in the channel  \r Use: `!blaise`\r ### PID\r - Calculates totally definitely correct PID values in the channel  \r Use: `!pid`\r ### Winner\r - Accurately predicts the winners of the upcoming FRC season  \r Use: `!winner`\r ### Spam\r - *not currently useable unless you have a channel and role named spam*\r - Adds or removes a user from the spam chat  \r Use: `!spam [add/remove] #[DiscordTag]`\r # Setup\r Setting up BeʳᵗBot is simple. It is a self-hosted bot, so this setup will show you how to create the bot and how to set it up on Glitch. Let's get started!\r  1. Let's create a Discord application [here](https://discordapp.com/developers/applications/). The name and app icon can be anything you want.\r  ![Step 1](https://i.imgur.com/022TUwH.jpg)\r  2. Go to the **Bot** tab on the left and hit *Add Bot* and then *Yes, do it!*. Again, the name and app icon can be anything you want. These will be what the bot user's name and avatar will be. The token that is generated will be needed later, so copy it or keep the tab open (but don't give it out!).\r  ![Step 2](https://i.imgur.com/vE1RAbK.jpg)\r  3. Next, lets set up the bot on [Glitch](https://glitch.com). Create an account and then create a new *hello-express* project. In the top left, click on the name of your project (you can rename it if you want) and select *Advanced Options*. Then, after hitting *Grant access*, click *Import from GitHub* and paste in `ngregrichardson/BertBot`. This will import the project into Glitch.\r  ![Step 3](https://i.imgur.com/w6CfsDL.jpg)\r  4. Next we can configure the bot to your needs. In *configuration.json*, there are a list of variables that you need to look over. You can decide which you need to change based on the following descriptions:\r \t- botName - The name of your bot as you set in the Discord application\r \t- teamNumber - The team number of your FRC team\r \t- discordServerId - The ID of your Discord server. Enable developer mode in Discord and right click on the server name to retrieve.\r \t- trelloNotificationsOn - Whether or not you want notifications from Trello boards in a channel enabled\r \t\t- trelloNotificationChannelId - The ID of the channel you want notifications in\r \t\t- trelloPollInterval - The amount of milliseconds between checks for new Trello updates (changing not recommended)\r \t\t- watchedTrelloBoardIds - The board IDs of the Trello boards you want to get notifications from. These are found in the link of the Trello board\r \t\t- enabledTrelloNotifications - The types of notifications you want ([full list below](https://github.com/ngregrichardson/BertBot/blob/master/README.md#enabledtrellonotifications-list))\r \t\t- trelloPrefix - Prefix for any Trello related commands (currently none)\r \t- orderRequestEmailSystemOn - Whether or not you want the order request system enabled\r \t\t- orderRequestBoardId - The Trello board ID of the *Order Request* board\r \t\t- orderPlacedChecklistItemName - The name of the checklist item that says whether or not the order has been placed\r \t\t- orderPlacedListName - The name of the list that has the placed orders\r \t\t- orderRequestedListName - The name of the list that has the requested orders\r \t- swearFilterOn - Whether or not the swear filter should be enabled\r \t\t- swearFilterWhitelistedChannelNames - The names of the channels that will not be affected by the swear filter\r \t- blaiseWhitelistedChannelNames - The names of the channels that allow the !blaise command (setting this to allowAll will allow it in all channels)\r \t- restrictedCommandRoles - The names of the roles that are able to use restricted commands\r \t- userIDs - The Trello name linked to the Discord ID of the person for use in Trello notifications\r \t- contentString - For use in Trello notifications, leave blank\r ![Step 4](https://i.imgur.com/pcGw6fQ.jpg)\r 5. Alright! now we're done the tedious part! The next thing we have to set up is out *.env* file. This is where all of our tokens and passwords will be kept. Copy and paste this in *.env* to get started, and I will explain what everything means below.\r > TOKEN=  \r > KEY=  \r > TTOKEN=  \r > GP=  \r > GFROM=  \r > GTO=  \r > R1=  \r > R2=",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "test": "node server.js"
+  },
+  "engines": {
+    "node": "8.4.0"
+  },
+  "author": "NRDesign",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngregrichardson/BertBot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ngregrichardson/BertBot/issues"
+  },
+  "homepage": "https://github.com/ngregrichardson/BertBot#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cool-ascii-faces": "^1.3.4",
+    "dadjokes-wrapper": "^0.1.4",
+    "discord.js": "^11.4.2",
+    "discord.js-commando": "^0.10.0",
+    "express": "^4.16.4",
+    "gmail-send": "^1.2.14",
+    "googleapis": "^36.0.0",
+    "imap-simple": "^4.3.0",
+    "lowdb": "^1.0.0",
+    "moment": "^2.24.0",
+    "node-superfetch": "^0.1.9",
+    "rapidapi-connect": "^0.0.6",
+    "trello-events": "^0.1.6",
+    "underscore": "^1.9.1",
+    "wikijs": "^5.0.0-alpha.1",
+    "firebase": "^5.8.4"
+  }
+}
