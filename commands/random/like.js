@@ -26,8 +26,7 @@ class Like extends commando.Command {
   async run(message, {
     term
   }) {
-    var ownerId = db.getOwnerId(message.guild.id);
-    var config = db.getConfig(ownerId);
+    var config = db.getConfig(message.guild.id);
     if (config.likeCounterEnabled) { // If like counter is enabled
       var likes; // Get likes from database
       var values = [];

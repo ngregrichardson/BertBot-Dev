@@ -45,8 +45,7 @@ class Meeting extends commando.Command {
     });
   }
   hasPermission(message) {
-    var ownerId = db.getOwnerId(message.guild.id);
-    var config = db.getConfig(ownerId);
+    var config = db.getConfig(message.guild.id);
     if (config.restrictedCommandRoles) return message.member.roles.some(r => config.restrictedCommandRoles.includes(r.name));
   }
 

@@ -27,8 +27,7 @@ class Blaise extends commando.Command {
   async run(message, {
     term
   }) {
-    var ownerId = db.getOwnerId(message.guild.id);
-    var config = db.getConfig(ownerId);
+    var config = db.getConfig(message.guild.id);
     // If the channel is whitelisted
     if (config.blaiseWhitelistedChannelNames.includes(message.channel.name) || config.blaiseWhitelistedChannelNames.includes("allowAll")) {
       if (term) { // If there is a term

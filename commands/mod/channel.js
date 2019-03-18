@@ -31,8 +31,7 @@ class Channel extends commando.Command {
     });
   }
   hasPermission(message) {
-    var ownerId = db.getOwnerId(message.guild.id);
-    var config = db.getConfig(ownerId);
+    var config = db.getConfig(message.guild.id);
     if (config.modCommandRoles) return message.member.roles.some(r => config.modCommandRoles.includes(r.name));
   }
 
@@ -41,8 +40,7 @@ class Channel extends commando.Command {
     name,
     type
   }) {
-    var ownerId = db.getOwnerId(message.guild.id);
-    var config = db.getConfig(ownerId);
+    var config = db.getConfig(message.guild.id);
     if (config.modSystemEnabled) { // If the moderation commands are enabled
       if (term == 'add') { // If we are adding
         console.log(!message.guild.channels.find('name', name));

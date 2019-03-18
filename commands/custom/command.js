@@ -1,8 +1,7 @@
 /* Config */
 const commando = require('discord.js-commando');
 const fs = require('fs');
-const db = require('/app/server.js').db,
-  config = require('/app/server.js').config;
+const db = require('/app/server.js');
 
 /* Command template */
 var file1 = "const commando = require('discord.js-commando'); class ";
@@ -47,6 +46,7 @@ class Command extends commando.Command {
     });
   }
   hasPermission(message) {
+    var config = db.getConfig(message.guild.id);
     if (config.restrictedCommandRoles) return message.member.roles.some(r => config.restrictedCommandRoles.includes(r.name));
   }
 
@@ -64,9 +64,6 @@ class Command extends commando.Command {
         commands[name] = name; // Add the command to the list
         db.set('commands', commands).write(); // Write the updated command list to the database
         message.channel.send('The !' + name + ' command was added. The bot is now restarting.'); // Confirm the creation
-        setTimeout(function () {
-          process.exit(); // Restart the bot
-        }, 1000);
       } else { // If the command already exists
         message.channel.send('The !' + name + ' command already exists. Please run the command again with another name.'); // Output error
       }
@@ -77,9 +74,6 @@ class Command extends commando.Command {
         delete commands[name]; // Remove the command from the list
         db.set('commands', commands).write(); // Write the updated command list to the database
         message.channel.send('The !' + name + ' command was removed. The bot is now restarting.'); // Confirm the deletion
-        setTimeout(function () {
-          process.exit(); // Restart the bot
-        }, 1000);
       } else { // If the command doesn't exist
         message.channel.send('The !' + name + ' command does not exist.'); // Output error
       }

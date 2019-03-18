@@ -28,8 +28,7 @@ class Role extends commando.Command {
     });
   }
   hasPermission(message) {
-    var ownerId = db.getOwnerId(message.guild.id);
-    var config = db.getConfig(ownerId);
+    var config = db.getConfig(message.guild.id);
     if (config.modCommandRoles) return message.member.roles.some(r => config.modCommandRoles.includes(r.name));
   }
 
@@ -38,8 +37,7 @@ class Role extends commando.Command {
     member,
     role
   }) {
-    var ownerId = db.getOwnerId(message.guild.id);
-    var config = db.getConfig(ownerId);
+    var config = db.getConfig(message.guild.id);
     if (config.modSystemEnabled) { // If the moderation commands are enabled
       if (member == null || member == undefined) { // If the member doesn't exists
         message.channel.send('There is no user with that username.'); // Output error

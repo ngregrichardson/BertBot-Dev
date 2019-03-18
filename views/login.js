@@ -1,3 +1,4 @@
+/* eslint-disable */
 var app = angular.module('app', ['ngMaterial', 'ngMessages', 'material.svgAssetsCache']).config(function ($mdThemingProvider) {
     $mdThemingProvider.theme('default').primaryPalette('red').accentPalette('red').dark();
 });
