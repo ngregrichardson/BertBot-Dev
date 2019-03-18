@@ -42,12 +42,14 @@
                         Verify Password:
                         <input type="password" name="passwordCheck" class="required" ng-model="passwordCheck"><br>
                         <input type="submit" name="signUp" ng-click="signUp()" value="Sign Up">
-                        <p style="color: red;" ng-if="error">{{ error }}</p>
                     </form>
                 </md-content>
             </md-tab>
         </md-tabs>
     </md-content>
+    <div ng-controller="errorController" id="errorController">
+        <p class="error" ng-if="err">{{ err }}</p>
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-animate.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-route.min.js"></script>

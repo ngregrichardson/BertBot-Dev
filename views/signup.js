@@ -1,3 +1,4 @@
+/* eslint-disable */
 var app = angular.module('app', ['ngMaterial', 'ngMessages', 'material.svgAssetsCache']).config(function ($mdThemingProvider) {
     $mdThemingProvider.theme('default').primaryPalette('red').accentPalette('red').dark();
 });
@@ -6,21 +7,30 @@ app.controller('signupController', function ($scope, $http) {
     $scope.email = '';
     $scope.password = '';
     $scope.passwordCheck = '';
-    $scope.error = '';
     $scope.signUp = function () {
         if ($scope.password == $scope.passwordCheck) {
             $http.post('/createUser', { email: $scope.email, password: encodeURIComponent($scope.password), serverId: getUrlParam('serverId', null) }).then($scope.success, $scope.failure);
         } else {
-            console.log('do not match');
+            error('The passwords do not match');
         }
     }
     $scope.success = function (res) {
-        window.location.href = `/settings?data=${res.data}`;
+        window.location.href = `/settings?id=${res.data}`;
     }
     $scope.failure = function (res) {
-        $scope.error = res.data;
+        error(res.data);
     }
 });
+
+app.controller('errorController', function ($scope) {
+  $scope.loadError = function (err) {
+    $scope.err = err
+  };
+});
+
+function error(err) {
+  angular.element(document.getElementById('errorController')).scope().loadError(err);
+}
 
 function getUrlParam(param, def) {
     var urlparameter = def;
