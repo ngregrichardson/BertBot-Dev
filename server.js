@@ -6,7 +6,7 @@ const port = 3000;
 var firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/firestore');
-var config = {
+var fb = {
   apiKey: "AIzaSyDs6bFjGG9IqrqmR5sIvVM64K3ayKB_RtA",
   authDomain: "bertbot-1537111406006.firebaseapp.com",
   databaseURL: "https://bertbot-1537111406006.firebaseio.com",
@@ -14,8 +14,9 @@ var config = {
   storageBucket: "bertbot-1537111406006.appspot.com",
   messagingSenderId: "310158549274"
 };
-firebase.initializeApp(config);
+firebase.initializeApp(fb);
 var db = firebase.firestore();
+var configs = {};
 /* App configuration */
 app.use(bodyParser.urlencoded({
   extended: false
@@ -95,8 +96,8 @@ async function getConfigs() {
     var configs = db.collection('configs');
     configs.get().then((snapshot) => {
       if (snapshot.exists) {
-        console.log(snapshot.data());
-        resolve(snapshot.data());
+        configs = (snapshot.data());
+        resolve(configs);
       } else {
         resolve(0);
       }
@@ -115,6 +116,12 @@ async function createConfig(id, serverId) {
     resolve(true);
   });
 }
+
+db.collection('configs').where('botName', '==', true).onSnapshot(function (snapshot){
+  for(var doc in snapshot) {
+    console.log(doc.data());
+  }
+});
 /* Meetings */
 app.post('/updateMeetings', (req, res) => {
   db.collection('configs').doc(req.body.uid).update(req.body.data);
