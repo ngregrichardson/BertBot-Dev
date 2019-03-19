@@ -90,6 +90,19 @@ async function getConfig(serverId) {
     });
   });
 }
+async function getConfigs() {
+  return await new Promise(resolve => {
+    var configs = db.collection('configs');
+    configs.get().then((snapshot) => {
+      if (snapshot.exists) {
+        console.log(snapshot.data());
+        resolve(snapshot.data());
+      } else {
+        resolve(0);
+      }
+    });
+  });
+}
 async function createConfig(id, serverId) {
   if (id == null || id == undefined) return;
   return await new Promise(resolve => {
@@ -209,6 +222,7 @@ var defaultConfig = {
 };
 module.exports = {
   getConfig: getConfig,
+  getConfigs: getConfigs,
   getOwnerId: getOwnerId,
   getUserLikes: getUserLikes,
   getLikes: getLikes,

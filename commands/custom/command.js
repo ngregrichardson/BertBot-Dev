@@ -4,8 +4,6 @@ const fs = require('fs');
 const db = require('/app/server.js');
 
 /* Command template */
-var file1 = "const commando = require('discord.js-commando'); class ";
-var file2 = " extends commando.Command { constructor(client) { super(client, { name: '";
 var file3 = "', group: 'custom', memberName: '";
 var file4 = "', description: '";
 var file5 = "' }); } async run(message, args) { message.channel.send('";
@@ -58,7 +56,7 @@ class Command extends commando.Command {
   }) {
     if (action == 'add') { // If we're adding
       if (!doesCommandExist(name)) { // If the command doesn't exist
-        var data = file1 + capitalize(name) + file2 + name + file3 + name + file4 + description + file5 + response + file6 + capitalize(name) + file7; // Create the command file
+        var data = `const commando = require('discord.js-commando'); class ${capitalize(name)} extends commando.Command { constructor(client) { super(client, { name: '${name}', group: 'custom', memberName: '${name}', description: '${description}' }); } async run(message, args) { message.channel.send('${response}'); } } module.exports = ${capitalize(name)};`; // Create the command file
         fs.writeFileSync('commands/custom/' + name + '.js', data); // Create the new command file
         var commands = db.get('commands').value(); // Get the command list from the database
         commands[name] = name; // Add the command to the list
