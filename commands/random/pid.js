@@ -19,7 +19,7 @@ class PID extends commando.Command {
     var p = Math.random(); // Generate random P value
     var i = Math.random(); // Generate random I value
     var d = Math.random(); // Generate random D value
-    message.channel.send("Your correct values are:\n\nP: " + p + "\n\nI: " + i + "\n\nD: " + d); // Display PID values
+    message.channel.send("Your values are:\n\nP: " + p + "\n\nI: " + i + "\n\nD: " + d); // Display PID values
   }
 }
 module.exports = PID;

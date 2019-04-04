@@ -57,7 +57,7 @@ class Strawpoll extends commando.Command {
         title,
         options
       });
-      message.channel.send(stripIndents`${body.title}http://www.strawpoll.me/${body.id}`); // Display the strawpoll
+      message.channel.send(stripIndents`${body.title} http://www.strawpoll.me/${body.id}`); // Display the strawpoll
       message.delete(); // Delete the message
     } catch (err) { // Catch any error
       message.channel.send(`Oh no, an error occurred: \`${err.message}\`. Try again later!`); // Output error

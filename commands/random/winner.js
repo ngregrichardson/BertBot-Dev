@@ -24,7 +24,7 @@ class Winner extends commando.Command {
       year = date.getFullYear() + 1; // We want the winners of the next year
     }
     // Display the winners of the correct season
-    message.channel.send("FRC Teams #" + Math.floor(Math.random() * 7331) + ", #" + Math.floor(Math.random() * 7331) + ", and #" + Math.floor(Math.random() * 7331) + " will win in the " + year + " season!");
+    message.channel.send("FRC Teams **#" + Math.floor(Math.random() * 7331) + "**, **#" + Math.floor(Math.random() * 7331) + "**, and **#" + Math.floor(Math.random() * 7331) + "** will win in the " + year + " season!");
   }
 }
 module.exports = Winner;

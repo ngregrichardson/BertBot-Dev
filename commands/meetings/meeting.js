@@ -1,4 +1,4 @@
-/* Config */                                          //TODO reimplement meetings
+/* Config */
 const commando = require('discord.js-commando');
 const Discord = require('discord.js');
 const db = require('/app/server.js');
@@ -10,43 +10,49 @@ class Meeting extends commando.Command {
       name: 'meeting',
       group: 'meetings',
       memberName: 'meeting',
-      usage: 'meeting <add|remove> <"description"> <day> <month> <start time>',
+      usage: 'meeting <add|remove> <"description"> <day> <month> <start time> <am|pm>',
       description: 'Manages meetings. **R**',
       args: [{
         key: 'action',
-        prompt: 'The correct usage of `!meeting` is `!meeting **add|remove** "description" day month time',
+        prompt: 'The correct usage of `!meeting` is `!meeting **add|remove** "description" day month time am|pm',
         type: 'string'
       },
       {
         key: 'description',
-        prompt: 'The correct usage of `!meeting` is `!meeting add|remove "**description**" day month time',
+        prompt: 'The correct usage of `!meeting` is `!meeting add|remove "**description**" day month time am|pm',
         type: 'string',
         default: ''
       },
       {
         key: 'day',
-        prompt: 'The correct usage of `!meeting` is `!meeting add|remove "description" **day** month time',
+        prompt: 'The correct usage of `!meeting` is `!meeting add|remove "description" **day** month time am|pm',
         type: 'string',
         default: ''
       },
       {
         key: 'month',
-        prompt: 'The correct usage of `!meeting` is `!meeting add|remove "description" day **month** time',
+        prompt: 'The correct usage of `!meeting` is `!meeting add|remove "description" day **month** time am|pm',
         type: 'string',
         default: ''
       },
       {
         key: 'time',
-        prompt: 'The correct usage of `!meeting` is `!meeting add|remove "description" day month **time**',
+        prompt: 'The correct usage of `!meeting` is `!meeting add|remove "description" day month **time** am|pm',
         type: 'string',
         default: ''
+      },
+      {
+        key: 'ampm',
+        prompt: 'The correct usage of `!meeting` is `!meeting add|remove "description" day month time **am|pm**',
+        type: 'string',
+        default: 'tf'
       }
       ]
     });
   }
   hasPermission(message) {
     var config = db.getConfig(message.guild.id);
-    if (config.restrictedCommandRoles) return message.member.roles.some(r => config.restrictedCommandRoles.includes(r.name));
+    if(config.restrictedCommandRoles) return message.member.roles.some(r => config.restrictedCommandRoles.includes(r.name));
   }
 
   async run(message, {
@@ -54,15 +60,18 @@ class Meeting extends commando.Command {
     description,
     day,
     month,
-    time
+    time,
+    ampm
   }) {
-    var meetings = db.getConfig(message.guild.id);
+    var meetings = db.getConfig(message.guild.id).meetings;
     if (action == 'add') { // If we're adding
       // Create the date
-      var date = moment([moment().year(), moment().month(month).format('M') - 1, parseInt(day), parseInt(time.split(':')[0]), parseInt(time.split(':')[1])]).toObject();
-      var remaining = moment(date).diff(moment(), 'days'); // Get the remaining time
+      var date = moment(`${moment().month(month).format('M')}-${parseInt(day)}-${moment().year()}-${parseInt(time.split(':')[0])}-${parseInt(time.split(':')[1])}-${ampm.toLowerCase()}`, 'M-D-YYYY-h-m-a').toObject();
       date.description = description; // Add the description to the date object
-      meetings[day + '-' + month + '-' + time] = date; // Add the date to the meeting list
+      date.time = time; // Add the time to the date object
+      date.month = moment(date).format('MMMM');
+      date.ampm = ampm.toLowerCase();
+      meetings[`${Object.keys(meetings).length}`] = date; // Add the date to the meeting list
       db.updateMeetings(message.guild.id, meetings); // Write the updated meeting list to the database
       message.channel.send('The meeting was added.'); // Confirm the creation
     } else if (action == 'remove') { // If we're removing
@@ -81,9 +90,10 @@ class Meeting extends commando.Command {
               delete meetings[meeting]; // Delete the meeting
               db.updateMeetings(message.guild.id, meetings); // Write the updated meeting list 
               message.channel.send('The meeting was removed.'); // Confirm the deletion
+              collector.stop(); // Stop the collector
             } else if (message.content.toLowerCase() == "no") { // If no
               message.channel.send('The removal process was aborted.'); // Confirm the abort
-              return; // Return
+              collector.stop(); // Stop the collector
             } else { // Otherwise
               message.channel.send('The correct usage is `yes|no`'); // Output error
             }

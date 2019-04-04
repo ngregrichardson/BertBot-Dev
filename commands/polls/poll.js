@@ -27,9 +27,9 @@ class Poll extends commando.Command {
   }
   async run(message, args) {
     message.channel.send('**' + args.question + '**').then(function (message) { // Send the question
+      message.react("👎"); // React with a thumbs down
       message.react("👍"); // React with a thumbs up
       message.react("🤷"); // React with a shrug
-      message.react("👎"); // React with a thumbs down
     }).catch(function (error) { // Catch any error
       console.log(error); // Output error
     });
