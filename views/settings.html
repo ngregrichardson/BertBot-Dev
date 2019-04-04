@@ -94,22 +94,22 @@
                                             ng-model="cardNameChanged">
                                         Card Name Changed
                                     </td>
-                                    <td><input type="checkbox" name="cardMemberAdded" ng-change="save('cardMemberAdded', cardMemberAdded)"
-                                            ng-model="cardMemberAdded">
+                                    <td><input type="checkbox" name="memberAddedToCard" ng-change="save('memberAddedToCard', memberAddedToCard)"
+                                            ng-model="memberAddedToCard">
                                         Card Member Added
                                     </td>
-                                    <td><input type="checkbox" name="cardMemberRemoved" ng-change="save('cardMemberRemoved', cardMemberRemoved)"
-                                            ng-model="cardMemberRemoved">
+                                    <td><input type="checkbox" name="memberRemovedFromCard" ng-change="save('memberRemovedFromCard', memberRemovedFromCard)"
+                                            ng-model="memberRemovedFromCard">
                                         Card Member Removed
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><input type="checkbox" name="cardChecklistAdded" ng-change="save('cardChecklistAdded', cardChecklistAdded)"
-                                            ng-model="cardChecklistAdded">
+                                    <td><input type="checkbox" name="checklistAddedToCard" ng-change="save('checklistAddedToCard', checklistAddedToCard)"
+                                            ng-model="checklistAddedToCard">
                                         Card Checklist Added
                                     </td>
-                                    <td><input type="checkbox" name="cardChecklistRemoved" ng-change="save('cardChecklistRemoved', cardChecklistRemoved)"
-                                            ng-model="cardChecklistRemoved">
+                                    <td><input type="checkbox" name="checklistRemovedFromCard" ng-change="save('checklistRemovedFromCard', checklistRemovedFromCard)"
+                                            ng-model="checklistRemovedFromCard">
                                         Card Checklist Removed
                                     </td>
                                     <td><input type="checkbox" name="cardDeleted" ng-change="save('cardDeleted', cardDeleted)"
@@ -126,12 +126,12 @@
                                             ng-model="cardArchived">
                                         Card Archived
                                     </td>
-                                    <td><input type="checkbox" name="cardAttachmentAdded" ng-change="save('cardAttachmentAdded', cardAttachmentAdded)"
-                                            ng-model="cardAttachmentAdded">
+                                    <td><input type="checkbox" name="attachmentAddedToCard" ng-change="save('attachmentAddedToCard', attachmentAddedToCard)"
+                                            ng-model="attachmentAddedToCard">
                                         Card Attachment Added
                                     </td>
-                                    <td><input type="checkbox" name="cardAttachmentRemoved" ng-change="save('cardAttachmentRemoved', cardAttachmentRemoved)"
-                                            ng-model="cardAttachmentRemoved">
+                                    <td><input type="checkbox" name="attachmentRemovedFromCard" ng-change="save('attachmentRemovedFromCard', attachmentRemovedFromCard)"
+                                            ng-model="attachmentRemovedFromCard">
                                         Card Attachment Removed
                                     </td>
                                     <td><input type="checkbox" name="commentAdded" ng-change="save('commentAdded', commentAdded)"
@@ -252,23 +252,27 @@
                         Enable Meeting Notifications?<br>
                         <div id="meetingNotifications" ng-hide="!meetingNotificationsEnabled">
                             Meeting Notifications Channel ID:
-                            <input type="text" name="meetingNotificationChannelId" class="required" ng-change="save('meetingNotificationChannelId', meetingNotificationChannelId)"
-                                ng-model="meetingNotificationChannelId">
+                            <input type="text" name="meetingNotificationsChannelId" class="required" ng-change="save('meetingNotificationsChannelId', meetingNotificationsChannelId)"
+                                ng-model="meetingNotificationsChannelId">
+                            <br>
                             <div id="meetings">
-                                <div class="meeting" id="{{ meetings.indexOf(meeting) }}" ng-repeat="meeting in meetings">
+                                <div class="meeting" ng-repeat="meeting in meetings">
                                     Description:
-                                    <input id="description" type="text" ng-model="meeting[Object.keys(meeting)[0]].description"
-                                        ng-change="save('meetings', meetings)"><br>
+                                    <input id="description" type="text" ng-model="meeting.description"
+                                        ng-change="saveMeeting(meeting, 'description')"><br>
                                     Day:
-                                    <input id="date" type="number" ng-model="meeting[Object.keys(meeting)[0]].date"
-                                        ng-change="save('meetings', meetings)"><br>
+                                    <input id="date" type="number" ng-model="meeting.date"
+                                        ng-change="saveMeeting(meeting, 'date')"><br>
                                     Month:
-                                    <input id="month" type="text" ng-model="months[meeting[Object.keys(meeting)[0]].months]"
-                                        ng-change="save('meetings', meetings)"><br>
+                                    <input id="month" type="text" ng-model="meeting.month"
+                                        ng-change="saveMeeting(meeting, 'month')"><br>
                                     Time:
-                                    <input id="time" type="text" ng-model="meeting[Object.keys(meeting)[0]].hours + ':' + meeting[Object.keys(meeting)[0]].minutes.toString().length == 1 ? '0' + meeting[Object.keys(meeting)[0]].minutes : meeting[Object.keys(meeting)[0]].minutes"
-                                        ng-change="save('meetings', meetings)"><br>
-                                    <input type="image" src="https://img.icons8.com/metro/1600/delete.png" onclick="remove(this)"></div><br>
+                                    <input id="time" type="text" ng-model="meeting.time"
+                                        ng-change="saveMeeting(meeting, 'time')"><br>
+                                    AM/PM:
+                                    <input id="ampm" type="text" ng-model="meeting.ampm"
+                                        ng-change="saveMeeting(meeting, 'ampm')"><br>
+                                    <input type="image" src="https://img.icons8.com/metro/1600/delete.png" ng-click="remove(meeting)"></div><br>
                             </div>
                         </div>
                     </form>

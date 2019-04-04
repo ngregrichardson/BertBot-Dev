@@ -43,8 +43,7 @@ class Channel extends commando.Command {
     var config = db.getConfig(message.guild.id);
     if (config.modSystemEnabled) { // If the moderation commands are enabled
       if (term == 'add') { // If we are adding
-        console.log(!message.guild.channels.find('name', name));
-        if (!message.guild.channels.find('name', name)) { // If the channel does not exist
+        if (!message.guild.channels.find(channel => channel.name == name)) { // If the channel does not exist
           message.guild.createChannel(name, type); // Create the channel
           message.channel.send('The #' + name + ' channel was created.'); // Confirm the creation
         } else { // Otherwise
@@ -52,8 +51,8 @@ class Channel extends commando.Command {
           return; // Return
         }
       } else if (term == 'remove') {
-        if (message.guild.channels.find('name', name)) { // If the channel exists
-          message.guild.channels.find('name', name).delete(); // Delete the channel
+        if (message.guild.channels.find(channel => channel.name == name)) { // If the channel exists
+          message.guild.channels.find(channel => channel.name == name).delete(); // Delete the channel
           message.channel.send('The #' + name + ' channel was removed.'); // Confirm the deletion
         } else { // Otherwise
           message.channel.send('There is no channel with that name.'); // Output error

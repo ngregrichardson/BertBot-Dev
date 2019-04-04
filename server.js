@@ -16,7 +16,30 @@ var fb = {
 };
 firebase.initializeApp(fb);
 var db = firebase.firestore();
-var configs = {};
+var configs;
+var servers;
+getCollection('configs').then((data) => {
+  configs = data;
+    db.collection('configs').onSnapshot(function (snapshot){
+      snapshot.docChanges().forEach(function(change){
+        configs[change.doc.id] = change.doc.data();
+        //if(configs[change.doc.id].trelloNotificationsEnabled == true || configs[change.doc.id].trelloNotificationsEnabled == 'true') bot.updateTrello(configs[change.doc.id]);
+        //if(configs[change.doc.id].orderSystemEnabled == true || configs[change.doc.id].orderSystemEnabled == 'true') bot.updateOrder(configs[change.doc.id]);
+      });
+  });
+}).catch((err) => {
+  console.log(err);
+});
+getCollection('servers').then((data) => {
+servers = data;
+  db.collection('servers').onSnapshot(function (snapshot){
+    snapshot.docChanges().forEach(function(change){
+      servers[change.doc.id] = change.doc.data();
+    });
+  });
+}).catch((err) => {
+  console.log(err);
+});
 /* App configuration */
 app.use(bodyParser.urlencoded({
   extended: false
@@ -57,10 +80,19 @@ app.get('/getConfig', (req, res) => {
 });
 app.post('/updateConfig', (req, res) => {
   if(req.body.uid == null || req.body.uid == undefined || req.body.uid == '') return;
-  console.log(req.body);
   var data = {};
   for(var i = 1; i < Object.keys(req.body).length; i++) {
-    data[Object.keys(req.body)[i].split('[')[1].slice(0, -1)] = req.body[Object.keys(req.body)[i]];
+    if(!Object.keys(req.body)[i].includes('data[meetings]')) {
+       data[Object.keys(req.body)[i].split('[')[1].slice(0, -1)] = req.body[Object.keys(req.body)[i]];
+    }else {
+      if(Object.keys(req.body)[i].includes('hasMeetings')) {
+        data['meetings'] = {};
+        continue;
+      }
+      if(!data['meetings']) data['meetings'] = {};
+      if(!data['meetings'][Object.keys(req.body)[i].split('[')[2].slice(0, -1)]) data['meetings'][Object.keys(req.body)[i].split('[')[2].slice(0, -1)] = {};
+      data['meetings'][Object.keys(req.body)[i].split('[')[2].slice(0, -1)][Object.keys(req.body)[i].split('[')[3].slice(0, -1)] = isNaN(req.body[Object.keys(req.body)[i]]) ? req.body[Object.keys(req.body)[i]] : parseInt(req.body[Object.keys(req.body)[i]]);
+    }
   }
   db.collection('configs').doc(req.body.uid).update(data);
 });
@@ -77,32 +109,24 @@ async function loadConfig(id) {
     });
   });
 }
-async function getConfig(serverId) {
+function getConfig(serverId) {
   if (serverId == null || serverId == undefined) return;
-  var id = await getOwnerId(serverId);
+  return configs[getOwnerId(serverId)];
+}
+async function getCollection(name) {
   return await new Promise(resolve => {
-    var config = db.collection('configs').doc(id);
-    config.get().then((snapshot) => {
-      if (snapshot.exists) {
-        resolve(snapshot.data());
-      } else {
-        resolve(0);
-      }
+    var configs = db.collection(name);
+    configs.get().then((snapshot) => {
+      var coll = {};
+      snapshot.docs.forEach((doc) => {
+        coll[doc.id] = doc.data();
+      });
+      resolve(coll);
     });
   });
 }
-async function getConfigs() {
-  return await new Promise(resolve => {
-    var configs = db.collection('configs');
-    configs.get().then((snapshot) => {
-      if (snapshot.exists) {
-        configs = (snapshot.data());
-        resolve(configs);
-      } else {
-        resolve(0);
-      }
-    });
-  });
+function getConfigs() {
+  return configs;
 }
 async function createConfig(id, serverId) {
   if (id == null || id == undefined) return;
@@ -116,20 +140,18 @@ async function createConfig(id, serverId) {
     resolve(true);
   });
 }
-
-db.collection('configs').where('botName', '==', true).onSnapshot(function (snapshot){
-  for(var doc in snapshot) {
-    console.log(doc.data());
+/* Trello */
+function updateActivityId(newId, boardId) {
+  for(var i = 0; i < Object.keys(configs).length; i++) {
+    if(configs[Object.keys(configs)[i]].watchedTrelloBoardIds.includes(boardId)) {
+      if(configs[Object.keys(configs)[i]].latestActivityId == newId) return
+      db.collection('configs').doc(Object.keys(configs)[i]).update({ latestActivityId: newId });
+    }
   }
-});
+}
 /* Meetings */
-app.post('/updateMeetings', (req, res) => {
-  db.collection('configs').doc(req.body.uid).update(req.body.data);
-});
 function updateMeetings(serverId, meetings) {
-  getOwnerId(serverId).then((id) => {
-    db.collection('configs').doc(id).update({ meetings: meetings });
-  });
+  db.collection('configs').doc(getOwnerId(serverId)).update({ meetings: meetings });
 }
 /* Likes */
 async function getLikes() {
@@ -177,18 +199,9 @@ app.post('/createUser', (req, res) => {
     res.status(499).send(error.message);
   });
 });
-async function getOwnerId(serverId) {
+function getOwnerId(serverId) {
   if (serverId == null || serverId == undefined) return;
-  return await new Promise(resolve => {
-    var server = db.collection('servers').doc(serverId);
-    server.get().then((snapshot) => {
-      if (snapshot.exists) {
-        resolve(snapshot.data().ownerId);
-      } else {
-        resolve(0);
-      }
-    });
-  });
+  return servers[serverId].ownerId;
 }
 app.listen(port, () => console.log(`== Server started on port ${port} ==`));
 var defaultConfig = {
@@ -201,6 +214,7 @@ var defaultConfig = {
   trelloNotificationsChannelId: '',
   watchedTrelloBoardIds: [],
   watchedTrelloNotifications: [],
+  latestActivityId: 0,
   orderSystemEnabled: false,
   orderRequestBoardId: '',
   orderPlacedChecklistItemName: '',
@@ -216,8 +230,8 @@ var defaultConfig = {
     'owner'
   ],
   meetingNotificationsEnabled: false,
-  meetingNotificationChannelId: '',
-  meetings: [],
+  meetingNotificationsChannelId: '',
+  meetings: {},
   likeCounterEnabled: false,
   blaiseWhitelistedChannelNames: [
     ''
@@ -231,8 +245,9 @@ module.exports = {
   getConfig: getConfig,
   getConfigs: getConfigs,
   getOwnerId: getOwnerId,
+  updateMeetings: updateMeetings,
   getUserLikes: getUserLikes,
   getLikes: getLikes,
   updateLikes: updateLikes,
-  updateMeetings: updateMeetings
+  updateActivityId: updateActivityId
 }

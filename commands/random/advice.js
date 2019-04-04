@@ -30,7 +30,7 @@ class Advice extends commando.Command {
       const {
         body
       } = await request.get('https://api.adviceslip.com/advice/search/' + term); // Get advice from that term
-      if (JSON.parse(body).slips.length != 0) { // If there is advice with that term
+      if (JSON.parse(body).slips != undefined && JSON.parse(body).slips.length != 0) { // If there is advice with that term
         message.channel.send(JSON.parse(body).slips[Math.floor(Math.random() * JSON.parse(body).slips.length)].advice); // Display the advice
       } else { // Otherwise
         message.channel.send('Sorry, there is no advice for that.'); // Output error

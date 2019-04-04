@@ -27,16 +27,15 @@
     "discord.js": "^11.4.2",
     "discord.js-commando": "^0.10.0",
     "express": "^4.16.4",
+    "firebase": "^5.9.1",
     "gmail-send": "^1.2.14",
-    "googleapis": "^36.0.0",
+    "i18n-iso-countries": "^3.7.8",
     "imap-simple": "^4.3.0",
-    "lowdb": "^1.0.0",
     "moment": "^2.24.0",
     "node-superfetch": "^0.1.9",
     "rapidapi-connect": "^0.0.6",
     "trello-events": "^0.1.6",
     "underscore": "^1.9.1",
-    "wikijs": "^5.0.0-alpha.1",
-    "firebase": "^5.8.4"
+    "wikijs": "^5.0.0-alpha.1"
   }
 }

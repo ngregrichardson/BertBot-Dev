@@ -1,5 +1,4 @@
 /* eslint-disable */
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 $.get('/getConfig', getUrlParam('id', null)).then(function (data) {
   if (data != null && data != undefined && data != '') {
     load(data);
@@ -66,15 +65,15 @@ app.controller('trelloSettingsController', function ($scope) {
     $scope.cardPositionChanged = data.watchedTrelloNotifications.includes('cardPositionChanged');
     $scope.cardListChanged = data.watchedTrelloNotifications.includes('cardListChanged');
     $scope.cardNameChanged = data.watchedTrelloNotifications.includes('cardNameChanged');
-    $scope.cardMemberAdded = data.watchedTrelloNotifications.includes('cardMemberAdded');
-    $scope.cardMemberRemoved = data.watchedTrelloNotifications.includes('cardMemberRemoved');
-    $scope.cardChecklistAdded = data.watchedTrelloNotifications.includes('cardChecklistAdded');
-    $scope.cardChecklistRemoved = data.watchedTrelloNotifications.includes('cardChecklistRemoved');
+    $scope.memberAddedToCard = data.watchedTrelloNotifications.includes('memberAddedToCard') || data.watchedTrelloNotifications.includes('memberAddedToCardBySelf');
+    $scope.memberRemovedFromCard = data.watchedTrelloNotifications.includes('memberRemovedFromCard') || data.watchedTrelloNotifications.includes('memberRemovedFromCardBySelf');;
+    $scope.checklistAddedToCard = data.watchedTrelloNotifications.includes('checklistAddedToCard');
+    $scope.checklistRemovedFromCard = data.watchedTrelloNotifications.includes('checklistRemovedFromCard');
     $scope.cardDeleted = data.watchedTrelloNotifications.includes('cardDeleted');
     $scope.cardUnarchived = data.watchedTrelloNotifications.includes('cardUnarchived');
     $scope.cardArchived = data.watchedTrelloNotifications.includes('cardArchived');
-    $scope.cardAttachmentAdded = data.watchedTrelloNotifications.includes('cardAttachmentAdded');
-    $scope.cardAttachmentRemoved = data.watchedTrelloNotifications.includes('cardAttachmentRemoved');
+    $scope.attachmentAddedToCard = data.watchedTrelloNotifications.includes('attachmentAddedToCard');
+    $scope.attachmentRemovedFromCard = data.watchedTrelloNotifications.includes('attachmentRemovedFromCard');
     $scope.commentAdded = data.watchedTrelloNotifications.includes('commentAdded');
     $scope.commentEdited = data.watchedTrelloNotifications.includes('commentEdited');
     $scope.listCreated = data.watchedTrelloNotifications.includes('listCreated');
@@ -155,7 +154,35 @@ app.controller('meetingSystemController', function ($scope) {
     $scope.saved[id] = val;
     output(`Saving ${id} as ${val}`);
   };
+  $scope.saveMeeting = function (meeting, field) {
+    if(field == 'month') {
+      $scope.meetings[Object.keys($scope.meetings).find(key => $scope.meetings[key] === meeting)].months = $scope.months.indexOf(meeting.month);
+    }else if(field == 'time') {
+      $scope.meetings[Object.keys($scope.meetings).find(key => $scope.meetings[key] === meeting)].hours = parseInt(meeting.time.split(':')[0]);
+      $scope.meetings[Object.keys($scope.meetings).find(key => $scope.meetings[key] === meeting)].minutes = parseInt(meeting.time.split(':')[1]);
+    }
+    $scope.saved['meetings'] = $scope.meetings;
+    output(`Saving meetings`);
+    output($scope.meetings);
+  };
+  $scope.remove = function(meeting) {
+    delete $scope.meetings[Object.keys($scope.meetings).find(key => $scope.meetings[key] === meeting)];
+    $scope.saved['meetings'] = $scope.meetings;
+    output(`Saving meetings`);
+    output($scope.meetings);
+  };
   $scope.getSaved = function () {
+    if($scope.saved['meetings']) {
+      var meetingsArray = [];
+      for(var i = 0; i < Object.keys($scope.meetings).length; i++) {
+        meetingsArray.push($scope.meetings[Object.keys($scope.meetings)[i]]);
+      }
+      if(meetingsArray.length != 0) {
+        $scope.saved['meetings'] = meetingsArray;
+      }else {
+        $scope.saved['meetings'] = [{ hasMeetings: false }];
+      }
+    }
     return $scope.saved;
   }
   $scope.resetSaved = function () {
@@ -164,6 +191,7 @@ app.controller('meetingSystemController', function ($scope) {
   $scope.load = function (data) {
     $scope.meetingNotificationsEnabled = data.meetingNotificationsEnabled == 'true' || data.meetingNotificationsEnabled == true;
     $scope.meetingNotificationsChannelId = data.meetingNotificationsChannelId;
+    $scope.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     $scope.meetings = data.meetings;
   };
 });

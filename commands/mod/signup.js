@@ -8,7 +8,8 @@ class Signup extends commando.Command {
       group: 'mod',
       memberName: 'signup',
       usage: 'signup',
-      description: 'Sends a link to the owner to sign up. **M**'
+      description: 'Sends a link to the owner to sign up. **M**',
+      ownerOnly: true
     });
   }
 

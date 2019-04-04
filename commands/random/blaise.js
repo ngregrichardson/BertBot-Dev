@@ -45,6 +45,8 @@ class Blaise extends commando.Command {
           message.channel.send(res); // Display the joke
         });
       }
+    }else {
+      message.channel.send(`Sorry, that's not enabled in this channel`);
     }
   }
 }
